@@ -15,7 +15,7 @@ pipeline {
   stages {
     stage('Checkout Code') {
       steps {
-        git branch: 'main', url: 'https://github.com/rohanPSI-1122/react-native-device-info.git', credentialsId: 'rohanPSI-1122'
+        git branch: 'main', url: 'https://github.com/rohanPSI-1122/elm-react-native.git', credentialsId: 'rohanPSI-1122'
       }
     }
 
