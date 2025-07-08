@@ -21,7 +21,8 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        sh 'npm install --save react-native-device-info'
+        sh 'npm install'
+        sh 'npx react-native link'
       }
     }
 
@@ -53,6 +54,7 @@ pipeline {
       steps {
         dir('android') {
           sh 'chmod +x gradlew'
+          sh './gradlew assembleDebug'
           sh './gradlew :app:assembleDebug'
 }
       }
