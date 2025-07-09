@@ -1,11 +1,11 @@
 pipeline {
-  agent {label 'agent'}
+  agent { label 'agent' }
 
   environment {
     NODE_ENV = 'development'
     JAVA_HOME = '/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.362.b09-4.el9.x86_64'
     ANDROID_HOME = '/opt/android-sdk'
-    PATH = "${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
+    PATH = "${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${env.PATH}"
   }
 
   tools {
@@ -50,7 +50,9 @@ pipeline {
       }
     }
 
-    script {
+    stage('Bundle & Build APK') {
+      steps {
+        script {
           sh 'chmod +x android/gradlew'
           sh 'mkdir -p android/app/src/main/assets'
           sh '''
@@ -61,10 +63,11 @@ pipeline {
               --bundle-output android/app/src/main/assets/index.android.bundle \
               --assets-dest android/app/src/main/res
           '''
-          sh './gradlew :app:assembleDebug'
+          sh 'cd android && ./gradlew :app:assembleDebug'
         }
       }
     }
+
     stage('Archive APK') {
       steps {
         archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
