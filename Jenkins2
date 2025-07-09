@@ -64,6 +64,7 @@ pipeline {
         --assets-dest android/app/src/main/res
     '''
     dir('android') {
+      sh 'chmod +x gradlew'
       sh './gradlew clean'
       sh './gradlew assembleDebug'
       sh './gradlew :app:assembleDebug'
