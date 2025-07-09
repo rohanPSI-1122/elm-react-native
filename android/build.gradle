@@ -22,12 +22,3 @@ allprojects {
     }
 }
 
-
-defaultConfig {
-    applicationId "com.elm"
-    minSdkVersion 21        // ✅ <-- move it here
-    targetSdkVersion 33     // or whatever your target is
-    versionCode 1
-    versionName "1.0"
-}
-
