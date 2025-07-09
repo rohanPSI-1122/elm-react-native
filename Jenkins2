@@ -50,25 +50,29 @@ pipeline {
       }
     }
 
-    stage('Build APK') {
-  steps {
-    dir('android') {
-      sh 'chmod +x gradlew'
-      sh 'mkdir -p app/src/main/assets'
+    stage('Build Android Release APK') {
+    steps {
+        script {
+            // Make gradlew executable
+            sh 'chmod +x android/gradlew'
 
-      sh '''
-        npx react-native bundle \
-          --platform android \
-          --dev false \
-          --entry-file index.android.js \
-          --bundle-output /home/ubuntu/workspace/elm-react/android/app/src/main/assets/index.android.bundle \
-          --assets-dest /home/ubuntu/workspace/elm-react/android/app/src/main/res
-      '''
+            // Create assets directory if missing
+            sh 'mkdir -p android/app/src/main/assets'
 
-      sh './gradlew assembleDebug'
+            // Bundle JS for release (non-dev mode)
+            sh '''
+                npx react-native bundle \
+                    --platform android \
+                    --dev false \
+                    --entry-file index.android.js \
+                    --bundle-output android/app/src/main/assets/index.android.bundle \
+                    --assets-dest android/app/src/main/res
+            '''
+
+            // Build release APK
+            sh './android/gradlew assembleRelease'
+        }
     }
-  }
-}
 
     stage('Archive APK') {
       steps {
