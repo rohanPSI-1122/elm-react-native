@@ -62,7 +62,7 @@ pipeline {
           --dev false \
           --entry-file launcher.js \
           --bundle-output /home/ubuntu/workspace/elm-react/android/app/src/main/assets/index.android.bundle \
-          --assets-dest app/src/main/res
+          --assets-dest /home/ubuntu/workspace/elm-react/android/app/src/main/res
       '''
 
       sh './gradlew assembleDebug'
