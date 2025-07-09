@@ -53,21 +53,19 @@ pipeline {
     stage('Build APK') {
   steps {
     dir('android') {
-      sh 'mkdir -p app/src/main/assets' // Ensure the assets folder exists
-    }
-    sh '''
-      npx react-native bundle \
-        --platform android \
-        --dev false \
-        --entry-file index.android.js \
-        --bundle-output android/app/src/main/assets/index.android.bundle \
-        --assets-dest android/app/src/main/res
-    '''
-    dir('android') {
       sh 'chmod +x gradlew'
-      sh './gradlew clean'
+      sh 'mkdir -p app/src/main/assets'
+
+      sh '''
+        npx react-native bundle \
+          --platform android \
+          --dev false \
+          --entry-file ../launcher.js \
+          --bundle-output app/src/main/assets/index.android.bundle \
+          --assets-dest app/src/main/res
+      '''
+
       sh './gradlew assembleDebug'
-      sh './gradlew :app:assembleDebug'
     }
   }
 }
