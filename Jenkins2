@@ -1,5 +1,5 @@
 pipeline {
-  agent {label 'agent'}
+  agent { label 'agent' }
 
   environment {
     NODE_ENV = 'development'
@@ -51,32 +51,27 @@ pipeline {
     }
 
     stage('Build Android Release APK') {
-    steps {
+      steps {
         script {
-            // Make gradlew executable
-            sh 'chmod +x android/gradlew'
-
-            // Create assets directory if missing
-            sh 'mkdir -p android/app/src/main/assets'
-
-            // Bundle JS for release (non-dev mode)
-            sh '''
-                npx react-native bundle \
-                    --platform android \
-                    --dev false \
-                    --entry-file index.android.js \
-                    --bundle-output android/app/src/main/assets/index.android.bundle \
-                    --assets-dest android/app/src/main/res
-            '''
-
-            // Build release APK
-            sh './android/gradlew assembleRelease'
+          sh 'chmod +x android/gradlew'
+          sh 'mkdir -p android/app/src/main/assets'
+          sh '''
+            npx react-native bundle \
+              --platform android \
+              --dev false \
+              --entry-file index.android.js \
+              --bundle-output android/app/src/main/assets/index.android.bundle \
+              --assets-dest android/app/src/main/res
+          '''
+          sh './android/gradlew assembleRelease'
         }
+      }
     }
 
     stage('Archive APK') {
       steps {
-        archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
+        // Archive release APK, not debug
+        archiveArtifacts artifacts: 'android/app/build/outputs/apk/release/app-release.apk', fingerprint: true
       }
     }
   }
